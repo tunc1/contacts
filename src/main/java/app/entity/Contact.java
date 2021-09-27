@@ -12,6 +12,12 @@ public class Contact
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     private String name,phone;
+    public Contact(){}
+    public Contact(String name,String phone)
+    {
+        this.name=name;
+        this.phone=phone;
+    }
     public long getId()
     {
         return id;
