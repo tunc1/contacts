@@ -9,8 +9,13 @@ import java.util.List;
 
 public class ContactRepository
 {
+    private static final ContactRepository instance=new ContactRepository();
+    public static ContactRepository getInstance()
+    {
+        return instance;
+    }
     private final SessionFactory sessionFactory;
-    public ContactRepository()
+    private ContactRepository()
     {
         this.sessionFactory=SessionFactoryHolder.getSessionFactory();
     }
