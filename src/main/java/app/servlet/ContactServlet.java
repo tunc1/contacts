@@ -29,8 +29,8 @@ public class ContactServlet extends HttpServlet
     }
     protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException
     {
-        String uri=request.getRequestURI();
-        if(uri.endsWith("/")||uri.endsWith("/api/contact"))
+        String uri=request.getPathInfo();
+        if(uri==null||uri.equals("/"))
         {
             List<Contact> list=contactRepository.list();
             write(response,contactSerializer.serialize(list));
@@ -51,7 +51,7 @@ public class ContactServlet extends HttpServlet
     }
     protected void doPut(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException
     {
-        String uri=request.getRequestURI();
+        String uri=request.getPathInfo();
         long id=getId(uri);
         String input=requestReader.read(request);
         Contact contact=contactSerializer.deserialize(input);
@@ -61,10 +61,14 @@ public class ContactServlet extends HttpServlet
     }
     protected void doDelete(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException
     {
-        String uri=request.getRequestURI();
+        String uri=request.getPathInfo();
         long id=getId(uri);
         Contact contact=contactRepository.getById(id);
         contactRepository.delete(contact);
+    }
+    private long getId(String path)
+    {
+        return Long.parseLong(path.substring(path.indexOf("/")+1));
     }
     private void write(HttpServletResponse response,String data) throws IOException
     {
@@ -72,10 +76,5 @@ public class ContactServlet extends HttpServlet
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         writer.print(data);
-    }
-    private Long getId(String uri)
-    {
-        String idString=uri.substring(uri.lastIndexOf("/")+1);
-        return Long.parseLong(idString);
     }
 }
